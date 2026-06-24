@@ -23,7 +23,7 @@
 
   /* 按鈕樣式 — 想改顏色就改這裡的 background */
   #myButton {
-    background: #FFD400;      /* 黃色,改這裡換顏色 */
+    background: #77C1C7;
     color: #000;
     border: none;
     border-radius: 12px;
@@ -35,7 +35,7 @@
   }
 
   #myButton:hover {
-    opacity: 0.85;
+    opacity: 0.65;
   }
 
   #myButton:disabled {
@@ -51,6 +51,13 @@
     color: #333;
     display: none;
   }
+
+  /* 總次數顯示 */
+  #countDisplay {
+    margin-top: 14px;
+    font-size: 13px;
+    color: #999;
+  }
 </style>
 </head>
 <body>
@@ -60,6 +67,7 @@
   <div id="message">
     <img src="https://novak8598.github.io/GIF-Valentine-/IMG_1315.gif" alt="動圖" style="max-width: 300px; border-radius: 12px;">
   </div>
+  <div id="countDisplay">總共被按了 ... 次</div>
 </div>
 
 <script>
@@ -67,21 +75,44 @@
   // 如果你同一頁要放好幾個不同按鈕,記得把每個 KEY 改成不一樣的名字
   const STORAGE_KEY = "myButtonClicked";
 
+  // countapi 的 namespace/key,想換成自己的名字也可以,但記得 get 跟 hit 要用同一組
+  const COUNT_NAMESPACE = "novak8598-gif-valentine";
+  const COUNT_KEY = "love-button";
+
   const btn = document.getElementById("myButton");
   const msg = document.getElementById("message");
+  const countDisplay = document.getElementById("countDisplay");
 
-  // 頁面載入時,檢查之前是否按過
+  // 先抓目前總次數顯示出來(不會增加次數)
+  fetch(`https://api.countapi.xyz/get/${COUNT_NAMESPACE}/${COUNT_KEY}`)
+    .then(res => res.json())
+    .then(data => {
+      const value = data.value === null ? 0 : data.value;
+      countDisplay.textContent = `總共被按了 ${value} 次`;
+    })
+    .catch(() => {
+      countDisplay.textContent = "";
+    });
+
+  // 頁面載入時,檢查這個瀏覽器之前是否按過
   if (localStorage.getItem(STORAGE_KEY) === "true") {
     btn.disabled = true;
-    btn.textContent = "已經按過了";
+    btn.textContent = "窩也愛你⌯>ᴗ<⌯♡";
     msg.style.display = "block";
   }
 
   btn.addEventListener("click", function () {
     localStorage.setItem(STORAGE_KEY, "true");
     btn.disabled = true;
-    btn.textContent = "已經按過了";
+    btn.textContent = "窩也愛你⌯>ᴗ<⌯♡";
     msg.style.display = "block";
+
+    // 累加總次數
+    fetch(`https://api.countapi.xyz/hit/${COUNT_NAMESPACE}/${COUNT_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        countDisplay.textContent = `總共被按了 ${data.value} 次`;
+      });
   });
 </script>
 
