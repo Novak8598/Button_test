@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>按鈕</title>
+<style>
+  /* 背景透明,這樣嵌入 Notion 後不會有色塊 */
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: -apple-system, "Helvetica Neue", "PingFang TC", sans-serif;
+  }
+
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+  }
+
+  /* 按鈕樣式 — 想改顏色就改這裡的 background */
+  #myButton {
+    background: #FFD400;      /* 黃色,改這裡換顏色 */
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 32px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  #myButton:hover {
+    opacity: 0.85;
+  }
+
+  #myButton:disabled {
+    background: #ccc;
+    color: #777;
+    cursor: not-allowed;
+  }
+
+  /* 顯示訊息的區塊 */
+  #message {
+    margin-top: 16px;
+    font-size: 16px;
+    color: #333;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <button id="myButton">愛我嗎</button>
+  <div id="message">
+    <img src="https://novak8598.github.io/GIF-Valentine-/IMG_1315.gif" alt="動圖" style="max-width: 300px; border-radius: 12px;">
+  </div>
+</div>
+
+<script>
+  // 用這個 KEY 在 localStorage 裡記錄「按過了」
+  // 如果你同一頁要放好幾個不同按鈕,記得把每個 KEY 改成不一樣的名字
+  const STORAGE_KEY = "myButtonClicked";
+
+  const btn = document.getElementById("myButton");
+  const msg = document.getElementById("message");
+
+  // 頁面載入時,檢查之前是否按過
+  if (localStorage.getItem(STORAGE_KEY) === "true") {
+    btn.disabled = true;
+    btn.textContent = "已經按過了";
+    msg.style.display = "block";
+  }
+
+  btn.addEventListener("click", function () {
+    localStorage.setItem(STORAGE_KEY, "true");
+    btn.disabled = true;
+    btn.textContent = "已經按過了";
+    msg.style.display = "block";
+  });
+</script>
+
+</body>
+</html>
